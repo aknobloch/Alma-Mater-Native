@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="song_options">
+        <item>Instrumental</item>
+        <item>Low Vocal</item>
+        <item>High Vocal</item>
+        <item>Vocal Only</item>
+    </string-array>
+</resources>
