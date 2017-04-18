@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Alma_Mater</string>
+    <string name="app_name">GGC Alma Mater</string>
     <string name="action_about">About</string>
     <string name="about_confirmation">OK</string>
     <string name="about_dialog">Alma Mater was made in April 2017 by Aaron Knobloch for ITEC 4550.</string>
