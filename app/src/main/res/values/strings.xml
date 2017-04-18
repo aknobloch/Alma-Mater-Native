@@ -6,4 +6,6 @@
     <string name="play_button">Play Button</string>
     <string name="pause_button">Pause Button</string>
     <string name="stop_button">Stop Button</string>
+    <string name="default_base_note">-</string>
+    <string name="needle_desc">Tone Needle</string>
 </resources>
