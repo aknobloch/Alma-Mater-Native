@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -33,6 +34,13 @@ public class MainActivity extends AppCompatActivity
 
         initializeSpinner();
         beginNoteRecognition();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        mPitchHandler.release();
     }
 
     private void initializeSpinner()

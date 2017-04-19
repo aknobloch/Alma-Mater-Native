@@ -1,6 +1,7 @@
 package com.aarondevelops.alma_mater;
 
 import android.app.Activity;
+import android.util.Log;
 import android.widget.TextView;
 
 import be.tarsos.dsp.AudioDispatcher;
@@ -15,11 +16,17 @@ public class PitchHandler implements PitchDetectionHandler
     Activity mContextActivity;
     AudioDispatcher mDispatcher;
     PitchCallback mListener;
+    PitchProcessor mProcessor;
 
     public  PitchHandler(Activity contextActivity, PitchCallback pitchListener)
     {
         this.mContextActivity = contextActivity;
         this.mListener = pitchListener;
+        mProcessor = new PitchProcessor(
+                PitchProcessor.PitchEstimationAlgorithm.FFT_YIN,
+                22050,
+                1024,
+                this);
     }
 
     public void startPitchDetection()
@@ -30,15 +37,23 @@ public class PitchHandler implements PitchDetectionHandler
         }
 
         mDispatcher = AudioDispatcherFactory.fromDefaultMicrophone(22050,1024,0);
-        mDispatcher.addAudioProcessor(new PitchProcessor(
-                PitchProcessor.PitchEstimationAlgorithm.FFT_YIN,
-                22050,
-                1024,
-                this));
+        mDispatcher.addAudioProcessor(mProcessor);
 
         new Thread(mDispatcher, "Audio Dispatcher").start();
     }
 
+    public void release()
+    {
+        if(mDispatcher == null)
+        {
+            Log.i(this.getClass().getName(),
+                    "Attempt to release PitchHandler aborted. No dispatcher active.");
+            return;
+        }
+
+        mDispatcher.removeAudioProcessor(mProcessor);
+        mDispatcher.stop();
+    }
 
     @Override
     public void handlePitch(PitchDetectionResult pitchDetectionResult, AudioEvent audioEvent)
