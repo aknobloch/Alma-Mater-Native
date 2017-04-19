@@ -1,10 +1,12 @@
 package com.aarondevelops.alma_mater;
 
 import android.Manifest;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity
 {
     public final int RECORD_AUDIO = 001;
     private PitchHandler mPitchHandler;
+    private BackgroundMediaFragment mMediaFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,9 +34,11 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mPitchHandler = new PitchHandler(this, this);
+        mMediaFragment = new BackgroundMediaFragment();
 
         initializeSpinner();
         beginNoteRecognition();
+        initializeMusicFragment();
     }
 
     @Override
@@ -61,6 +66,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void initializeMusicFragment()
+    {
+        setSong();
+        bindFragment(mMediaFragment, BackgroundMediaFragment.MEDIA_HELPER_TAG);
+    }
+
+    private void setSong()
+    {
+        int songID = MusicManager.getResourceID((Spinner) findViewById(R.id.songDropdown));
+        mMediaFragment.setMediaID(songID);
+    }
+
     private void startAudioRecording()
     {
         mPitchHandler.startPitchDetection();
@@ -71,6 +88,22 @@ public class MainActivity extends AppCompatActivity
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.RECORD_AUDIO},
                 RECORD_AUDIO);
+
+    }
+
+    public void bindFragment(Fragment bindingFragment, String tag)
+    {
+        FragmentManager fragmentManager = getFragmentManager();
+
+        if(fragmentManager.findFragmentByTag(tag) != null)
+        {
+            // fragment already created
+            return;
+        }
+
+        fragmentManager.beginTransaction()
+                .add(bindingFragment, tag)
+                .commit();
 
     }
 
