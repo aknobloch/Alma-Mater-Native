@@ -11,12 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.aarondevelops.alma_mater.BackgroundFragments.BackgroundMediaFragment;
 import com.aarondevelops.alma_mater.AudioUtils.MusicManager;
+import com.aarondevelops.alma_mater.BackgroundFragments.BackgroundMediaFragment;
 import com.aarondevelops.alma_mater.BackgroundFragments.NoteRecognitionFragment;
 import com.aarondevelops.alma_mater.R;
 import com.aarondevelops.alma_mater.Utils.MessageHelper;
@@ -43,22 +44,20 @@ public class MainActivity extends AppCompatActivity implements
         initializeNoteFragment();
     }
 
-    private void initializeSpinner()
-    {
-        Spinner spinner = (Spinner) findViewById(R.id.songDropdown);
-        new TrackChoiceAdapter(this, spinner);
-    }
-
-    private void initializeMusicFragment()
+    public void onPlayButton(View v)
     {
         setSong();
-        bindFragment(mMediaFragment, BackgroundMediaFragment.MEDIA_HELPER_TAG);
+        mMediaFragment.playMedia();
     }
 
-    private void initializeNoteFragment()
+    public void onPauseButton(View v)
     {
-        mNoteRecognitionFragment.setNeedleView((ImageView) findViewById(R.id.needle));
-        bindFragment(mNoteRecognitionFragment, NoteRecognitionFragment.NOTE_HELPER_FRAG);
+        mMediaFragment.pauseMedia();
+    }
+
+    public void onStopButton(View v)
+    {
+        mMediaFragment.stopMedia();
     }
 
     private void setSong()
@@ -67,16 +66,60 @@ public class MainActivity extends AppCompatActivity implements
         mMediaFragment.setMediaID(songID);
     }
 
-    public void bindFragment(Fragment bindingFragment, String tag)
+    private void initializeSpinner()
+    {
+        Spinner spinner = (Spinner) findViewById(R.id.songDropdown);
+        new TrackChoiceAdapter(this, spinner);
+    }
+
+    private void initializeMusicFragment()
+    {
+        if(fragmentExists(mMediaFragment.MEDIA_HELPER_TAG))
+        {
+            mMediaFragment = (BackgroundMediaFragment)
+                    getFragmentManager().findFragmentByTag(mMediaFragment.MEDIA_HELPER_TAG);
+        }
+        else
+        {
+            bindFragment(mMediaFragment, BackgroundMediaFragment.MEDIA_HELPER_TAG);
+            setSong();
+        }
+    }
+
+    private void initializeNoteFragment()
+    {
+        if(fragmentExists(mNoteRecognitionFragment.NOTE_HELPER_TAG))
+        {
+            mNoteRecognitionFragment = (NoteRecognitionFragment)
+                    getFragmentManager().findFragmentByTag(mNoteRecognitionFragment.NOTE_HELPER_TAG);
+        }
+        else
+        {
+            mNoteRecognitionFragment.setNeedleView((ImageView) findViewById(R.id.needle));
+            bindFragment(mNoteRecognitionFragment, NoteRecognitionFragment.NOTE_HELPER_TAG);
+        }
+    }
+
+    private boolean fragmentExists(String tag)
     {
         FragmentManager fragmentManager = getFragmentManager();
 
         if(fragmentManager.findFragmentByTag(tag) != null)
         {
-            // fragment already created
+            return true;
+        }
+
+        return false;
+    }
+
+    public void bindFragment(Fragment bindingFragment, String tag)
+    {
+        if(fragmentExists(tag))
+        {
             return;
         }
 
+        FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .add(bindingFragment, tag)
                 .commit();
@@ -143,5 +186,7 @@ public class MainActivity extends AppCompatActivity implements
             mNoteRecognitionFragment.notifyRecordPermissionGranted();
         }
     }
+
+
 
 }

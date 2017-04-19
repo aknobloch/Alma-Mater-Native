@@ -17,7 +17,7 @@ import com.aarondevelops.alma_mater.AudioUtils.PitchHandler;
 public class NoteRecognitionFragment extends Fragment implements PitchCallback
 {
 
-    public static final String NOTE_HELPER_FRAG = "NoteRecognitionFragment";
+    public static final String NOTE_HELPER_TAG = "NoteRecognitionFragment";
     public static final int RECORD_AUDIO_PERMISSION = 001;
 
     private Context mAppContext;

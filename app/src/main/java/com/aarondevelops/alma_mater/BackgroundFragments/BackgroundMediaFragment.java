@@ -40,6 +40,12 @@ public class BackgroundMediaFragment extends Fragment
         super.onResume();
     }
 
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+    }
+
     public void playMedia()
     {
         if(mediaID == null)
@@ -83,7 +89,8 @@ public class BackgroundMediaFragment extends Fragment
             return;
         }
 
-        mediaPlayer.stop();
+        mediaPlayer.release();
+        mediaPlayer = null;
         Log.i(MEDIA_HELPER_TAG, "Stopping track.");
     }
 
