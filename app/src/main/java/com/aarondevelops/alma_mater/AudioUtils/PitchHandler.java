@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.aarondevelops.alma_mater.Framework.Note;
+import com.aarondevelops.alma_mater.Framework.PitchCallback;
 import com.aarondevelops.alma_mater.R;
 
 import be.tarsos.dsp.AudioDispatcher;

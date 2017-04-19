@@ -10,8 +10,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.aarondevelops.alma_mater.AudioUtils.Note;
-import com.aarondevelops.alma_mater.AudioUtils.PitchCallback;
+import com.aarondevelops.alma_mater.Framework.Note;
+import com.aarondevelops.alma_mater.Framework.PitchCallback;
 import com.aarondevelops.alma_mater.AudioUtils.PitchHandler;
 
 public class NoteRecognitionFragment extends Fragment implements PitchCallback

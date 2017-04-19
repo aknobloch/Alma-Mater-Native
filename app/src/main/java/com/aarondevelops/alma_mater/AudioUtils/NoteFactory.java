@@ -1,5 +1,7 @@
 package com.aarondevelops.alma_mater.AudioUtils;
 
+import com.aarondevelops.alma_mater.Framework.Note;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 

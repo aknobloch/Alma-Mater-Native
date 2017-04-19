@@ -2,11 +2,9 @@ package com.aarondevelops.alma_mater.Boundary;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -144,29 +142,10 @@ public class MainActivity extends AppCompatActivity implements
 
         if (id == R.id.action_about)
         {
-            showAboutMessage();
+            MessageHelper.showDialogSplash(this, getString(R.string.about_dialog));
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showAboutMessage()
-    {
-        new AlertDialog.Builder(this)
-
-                .setMessage(getString(R.string.about_dialog))
-
-                .setPositiveButton(getString(R.string.about_confirmation),
-                        new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                dialog.cancel();
-                            }
-                        })
-
-                .show();
     }
 
     @Override

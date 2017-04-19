@@ -1,10 +1,11 @@
 package com.aarondevelops.alma_mater.Utils;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 
@@ -139,5 +140,24 @@ public class MessageHelper
             speaker.setSpeechRate(.95f);
         }
 
+    }
+
+    public static void showDialogSplash(Context context, String message)
+    {
+        new AlertDialog.Builder(context)
+
+                .setMessage(message)
+
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                dialog.cancel();
+                            }
+                        })
+
+                .show();
     }
 }
