@@ -1,4 +1,4 @@
-package com.aarondevelops.alma_mater;
+package com.aarondevelops.alma_mater.Boundary;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;

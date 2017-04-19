@@ -1,4 +1,4 @@
-package com.aarondevelops.alma_mater;
+package com.aarondevelops.alma_mater.Boundary;
 
 import android.Manifest;
 import android.app.FragmentManager;
@@ -11,12 +11,19 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.aarondevelops.alma_mater.AudioUtils.BackgroundMediaFragment;
+import com.aarondevelops.alma_mater.AudioUtils.MusicManager;
+import com.aarondevelops.alma_mater.AudioUtils.Note;
+import com.aarondevelops.alma_mater.AudioUtils.PitchCallback;
+import com.aarondevelops.alma_mater.AudioUtils.PitchHandler;
+import com.aarondevelops.alma_mater.Utils.MessageHelper;
+import com.aarondevelops.alma_mater.R;
 
 public class MainActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback,

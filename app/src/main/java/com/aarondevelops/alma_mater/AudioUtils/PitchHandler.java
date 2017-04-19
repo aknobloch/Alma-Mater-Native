@@ -1,8 +1,10 @@
-package com.aarondevelops.alma_mater;
+package com.aarondevelops.alma_mater.AudioUtils;
 
 import android.app.Activity;
 import android.util.Log;
 import android.widget.TextView;
+
+import com.aarondevelops.alma_mater.R;
 
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.AudioEvent;

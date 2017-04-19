@@ -1,6 +1,8 @@
-package com.aarondevelops.alma_mater;
+package com.aarondevelops.alma_mater.AudioUtils;
 
 import android.widget.Spinner;
+
+import com.aarondevelops.alma_mater.R;
 
 /**
  * Created by Aaron K on 4/18/2017.
