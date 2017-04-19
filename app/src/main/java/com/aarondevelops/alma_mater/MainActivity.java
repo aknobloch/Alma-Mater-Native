@@ -72,8 +72,6 @@ public class MainActivity extends AppCompatActivity
                 PackageManager.PERMISSION_GRANTED;
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -121,7 +119,7 @@ public class MainActivity extends AppCompatActivity
         float normalizedDegree = (float)
                 ((detectedNote.getNormalizedValue() * range) - 35);
 
-        ImageView needle = (ImageView) findViewById(R.id.imageView);
+        ImageView needle = (ImageView) findViewById(R.id.needle);
         needle.setPivotX(needle.getWidth() / 2);
         needle.setPivotY(needle.getHeight() - (needle.getHeight() / 10));
         needle.setRotation(normalizedDegree);
