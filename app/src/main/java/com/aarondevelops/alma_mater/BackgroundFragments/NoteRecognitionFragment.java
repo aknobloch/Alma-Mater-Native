@@ -101,4 +101,11 @@ public class NoteRecognitionFragment extends Fragment implements PitchCallback
 
     }
 
+    public void reinitialize()
+    {
+        mPitchHandler.release();
+        mPitchHandler = new PitchHandler(getActivity(), this);
+        beginNoteRecognition();
+    }
+
 }

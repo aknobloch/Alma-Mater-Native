@@ -82,8 +82,9 @@ public class MainActivity extends AppCompatActivity implements
         else
         {
             bindFragment(mMediaFragment, BackgroundMediaFragment.MEDIA_HELPER_TAG);
-            setSong();
         }
+
+        setSong();
     }
 
     private void initializeNoteFragment()
@@ -92,12 +93,14 @@ public class MainActivity extends AppCompatActivity implements
         {
             mNoteRecognitionFragment = (NoteRecognitionFragment)
                     getFragmentManager().findFragmentByTag(mNoteRecognitionFragment.NOTE_HELPER_TAG);
+            mNoteRecognitionFragment.reinitialize();
         }
         else
         {
-            mNoteRecognitionFragment.setNeedleView((ImageView) findViewById(R.id.needle));
             bindFragment(mNoteRecognitionFragment, NoteRecognitionFragment.NOTE_HELPER_TAG);
         }
+
+        mNoteRecognitionFragment.setNeedleView((ImageView) findViewById(R.id.needle));
     }
 
     private boolean fragmentExists(String tag)
