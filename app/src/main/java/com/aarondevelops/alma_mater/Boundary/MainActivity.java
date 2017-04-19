@@ -1,13 +1,11 @@
 package com.aarondevelops.alma_mater.Boundary;
 
-import android.Manifest;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,21 +15,17 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.aarondevelops.alma_mater.AudioUtils.BackgroundMediaFragment;
+import com.aarondevelops.alma_mater.BackgroundFragments.BackgroundMediaFragment;
 import com.aarondevelops.alma_mater.AudioUtils.MusicManager;
-import com.aarondevelops.alma_mater.AudioUtils.Note;
-import com.aarondevelops.alma_mater.AudioUtils.PitchCallback;
-import com.aarondevelops.alma_mater.AudioUtils.PitchHandler;
-import com.aarondevelops.alma_mater.Utils.MessageHelper;
+import com.aarondevelops.alma_mater.BackgroundFragments.NoteRecognitionFragment;
 import com.aarondevelops.alma_mater.R;
+import com.aarondevelops.alma_mater.Utils.MessageHelper;
 
-public class MainActivity extends AppCompatActivity
-        implements ActivityCompat.OnRequestPermissionsResultCallback,
-        PitchCallback
+public class MainActivity extends AppCompatActivity implements
+        ActivityCompat.OnRequestPermissionsResultCallback
 {
-    public final int RECORD_AUDIO = 001;
-    private PitchHandler mPitchHandler;
     private BackgroundMediaFragment mMediaFragment;
+    private NoteRecognitionFragment mNoteRecognitionFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,19 +34,13 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mPitchHandler = new PitchHandler(this, this);
+
         mMediaFragment = new BackgroundMediaFragment();
+        mNoteRecognitionFragment = new NoteRecognitionFragment();
 
         initializeSpinner();
-        beginNoteRecognition();
         initializeMusicFragment();
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-        mPitchHandler.release();
+        initializeNoteFragment();
     }
 
     private void initializeSpinner()
@@ -61,41 +49,22 @@ public class MainActivity extends AppCompatActivity
         new TrackChoiceAdapter(this, spinner);
     }
 
-    private void beginNoteRecognition()
-    {
-        if(hasAudioPermission())
-        {
-            startAudioRecording();
-        }
-        else
-        {
-            getAudioPermission();
-        }
-    }
-
     private void initializeMusicFragment()
     {
         setSong();
         bindFragment(mMediaFragment, BackgroundMediaFragment.MEDIA_HELPER_TAG);
     }
 
+    private void initializeNoteFragment()
+    {
+        mNoteRecognitionFragment.setNeedleView((ImageView) findViewById(R.id.needle));
+        bindFragment(mNoteRecognitionFragment, NoteRecognitionFragment.NOTE_HELPER_FRAG);
+    }
+
     private void setSong()
     {
         int songID = MusicManager.getResourceID((Spinner) findViewById(R.id.songDropdown));
         mMediaFragment.setMediaID(songID);
-    }
-
-    private void startAudioRecording()
-    {
-        mPitchHandler.startPitchDetection();
-    }
-
-    private void getAudioPermission()
-    {
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.RECORD_AUDIO},
-                RECORD_AUDIO);
-
     }
 
     public void bindFragment(Fragment bindingFragment, String tag)
@@ -112,12 +81,6 @@ public class MainActivity extends AppCompatActivity
                 .add(bindingFragment, tag)
                 .commit();
 
-    }
-
-    private boolean hasAudioPermission()
-    {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
-                PackageManager.PERMISSION_GRANTED;
     }
 
     @Override
@@ -161,22 +124,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPitchDetected(Note detectedNote)
-    {
-        double range = 70;
-        float normalizedDegree = (float)
-                ((detectedNote.getNormalizedValue() * range) - 35);
-
-        ImageView needle = (ImageView) findViewById(R.id.needle);
-        needle.setPivotX(needle.getWidth() / 2);
-        needle.setPivotY(needle.getHeight() - (needle.getHeight() / 10));
-        needle.setRotation(normalizedDegree);
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        if(requestCode != RECORD_AUDIO)
+        if(requestCode != NoteRecognitionFragment.RECORD_AUDIO_PERMISSION)
         {
             return;
         }
@@ -186,11 +136,12 @@ public class MainActivity extends AppCompatActivity
             MessageHelper.makeToast(this,
                     "Audio permission is required to run Note Recognizer",
                     Toast.LENGTH_LONG);
-            this.finishAndRemoveTask();
+            finishAndRemoveTask();
         }
         else
         {
-            beginNoteRecognition();
+            mNoteRecognitionFragment.notifyRecordPermissionGranted();
         }
     }
+
 }
