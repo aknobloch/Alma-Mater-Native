@@ -11,9 +11,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aarondevelops.alma_mater.AudioUtils.LyricManager;
 import com.aarondevelops.alma_mater.AudioUtils.MusicManager;
 import com.aarondevelops.alma_mater.BackgroundFragments.BackgroundMediaFragment;
 import com.aarondevelops.alma_mater.BackgroundFragments.NoteRecognitionFragment;
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements
         initializeSpinner();
         initializeMusicFragment();
         initializeNoteFragment();
+        initializeProgressBar();
+        initializeLyricListener();
     }
 
     public void onPlayButton(View v)
@@ -99,6 +104,23 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         mNoteRecognitionFragment.setNeedleView((ImageView) findViewById(R.id.needle));
+    }
+
+    private void initializeProgressBar()
+    {
+        ProgressBar scrubBar = (ProgressBar) findViewById(R.id.scrubBar);
+        mMediaFragment.registerScrubBar(scrubBar);
+    }
+
+    private void initializeLyricListener()
+    {
+        // create listenre, register with mediafrag
+        TextView pastLyrics = (TextView) findViewById(R.id.pastLyric);
+        TextView currentLyrics = (TextView) findViewById(R.id.currentLyric);
+        TextView nextLyrics = (TextView) findViewById(R.id.nextLyric);
+
+        LyricManager lyricManager = new LyricManager(pastLyrics, currentLyrics, nextLyrics);
+        mMediaFragment.registerMediaListener(lyricManager);
     }
 
     private boolean fragmentExists(String tag)
