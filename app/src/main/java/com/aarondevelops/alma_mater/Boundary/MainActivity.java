@@ -16,9 +16,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aarondevelops.alma_mater.AudioUtils.LyricManager;
 import com.aarondevelops.alma_mater.AudioUtils.MusicManager;
 import com.aarondevelops.alma_mater.BackgroundFragments.BackgroundMediaFragment;
+import com.aarondevelops.alma_mater.BackgroundFragments.LyricManagerFragment;
 import com.aarondevelops.alma_mater.BackgroundFragments.NoteRecognitionFragment;
 import com.aarondevelops.alma_mater.R;
 import com.aarondevelops.alma_mater.Utils.MessageHelper;
@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements
 {
     private BackgroundMediaFragment mMediaFragment;
     private NoteRecognitionFragment mNoteRecognitionFragment;
+    private LyricManagerFragment mLyricManagerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,12 +40,13 @@ public class MainActivity extends AppCompatActivity implements
 
         mMediaFragment = new BackgroundMediaFragment();
         mNoteRecognitionFragment = new NoteRecognitionFragment();
+        mLyricManagerFragment = new LyricManagerFragment();
 
         initializeSpinner();
         initializeMusicFragment();
         initializeNoteFragment();
         initializeProgressBar();
-        initializeLyricListener();
+        initializeLyricFragment();
     }
 
     public void onPlayButton(View v)
@@ -112,15 +114,24 @@ public class MainActivity extends AppCompatActivity implements
         mMediaFragment.registerScrubBar(scrubBar);
     }
 
-    private void initializeLyricListener()
+    private void initializeLyricFragment()
     {
-        // create listenre, register with mediafrag
+        if(fragmentExists(mLyricManagerFragment.LYRIC_MANAGER_TAG))
+        {
+            mLyricManagerFragment = (LyricManagerFragment)
+                    getFragmentManager().findFragmentByTag(mLyricManagerFragment.LYRIC_MANAGER_TAG);
+        }
+        else
+        {
+            bindFragment(mLyricManagerFragment, LyricManagerFragment.LYRIC_MANAGER_TAG);
+        }
+
         TextView pastLyrics = (TextView) findViewById(R.id.pastLyric);
         TextView currentLyrics = (TextView) findViewById(R.id.currentLyric);
         TextView nextLyrics = (TextView) findViewById(R.id.nextLyric);
 
-        LyricManager lyricManager = new LyricManager(pastLyrics, currentLyrics, nextLyrics);
-        mMediaFragment.registerMediaListener(lyricManager);
+        mLyricManagerFragment.setLyricFields(pastLyrics, currentLyrics, nextLyrics);
+        mMediaFragment.registerMediaListener(mLyricManagerFragment);
     }
 
     private boolean fragmentExists(String tag)

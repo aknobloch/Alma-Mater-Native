@@ -1,12 +1,16 @@
-package com.aarondevelops.alma_mater.AudioUtils;
+package com.aarondevelops.alma_mater.BackgroundFragments;
 
+import android.app.Fragment;
 import android.widget.TextView;
+
+import com.aarondevelops.alma_mater.Framework.MediaListener;
 
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-public class LyricManager implements MediaListener
+public class LyricManagerFragment extends Fragment implements MediaListener
 {
+    public static final String LYRIC_MANAGER_TAG = "LyricManagerFragment";
 
     private TextView mPastLyric;
     private TextView mCurrentLyric;
@@ -18,7 +22,13 @@ public class LyricManager implements MediaListener
         initializeQueue();
     }
 
-    public LyricManager(TextView pastLyric, TextView currentLyric, TextView nextLyric)
+    public LyricManagerFragment()
+    {
+        super();
+        initializeQueue();
+    }
+
+    public void setLyricFields(TextView pastLyric, TextView currentLyric, TextView nextLyric)
     {
         mPastLyric = pastLyric;
         mCurrentLyric = currentLyric;
@@ -31,13 +41,13 @@ public class LyricManager implements MediaListener
         int progressSeconds = progressMilliseconds / 1000;
         String currentLyric = getAppropriateLyric(progressSeconds);
 
-        if(mCurrentLyric.getText().equals(currentLyric))
+        // continuously advance lyrics until the currently displayed
+        // lyric matches what it should be. this will usually just be
+        // once, unless orientation changes and it needs to catch back up
+        while( ! mCurrentLyric.getText().equals(currentLyric))
         {
-            // currently displayed lyric matches what it should be
-            return;
+            advanceLyrics();
         }
-
-        advanceLyrics();
     }
 
     private void advanceLyrics()

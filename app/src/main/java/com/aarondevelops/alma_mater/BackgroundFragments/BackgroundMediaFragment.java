@@ -10,7 +10,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.ProgressBar;
 
-import com.aarondevelops.alma_mater.AudioUtils.MediaListener;
+import com.aarondevelops.alma_mater.Framework.MediaListener;
 
 public class BackgroundMediaFragment extends Fragment
 {
