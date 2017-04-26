@@ -20,7 +20,6 @@ public class BackgroundMediaFragment extends Fragment
     private Integer mediaID;
     private MediaPlayer mediaPlayer;
     private ProgressBar mScrubBar;
-    private boolean mPlaying = false;
     private MediaListener mMediaListener;
 
     public BackgroundMediaFragment()
@@ -73,8 +72,6 @@ public class BackgroundMediaFragment extends Fragment
         }
 
         mediaPlayer.start();
-        mPlaying = true;
-
         initializeScrubBar();
 
         Log.i(MEDIA_HELPER_TAG, "Playing track.");
@@ -88,7 +85,7 @@ public class BackgroundMediaFragment extends Fragment
             return;
         }
 
-        mScrubBar.setMax(mediaPlayer.getDuration());
+        mScrubBar.setMax(getAudioLengthMilliseconds());
         mScrubBar.setProgress(mediaPlayer.getCurrentPosition());
         new ScrubBarUpdater().execute();
     }
@@ -102,7 +99,6 @@ public class BackgroundMediaFragment extends Fragment
         }
 
         mediaPlayer.pause();
-        mPlaying = false;
         Log.i(MEDIA_HELPER_TAG, "Pausing track.");
     }
 
@@ -114,7 +110,6 @@ public class BackgroundMediaFragment extends Fragment
             return;
         }
 
-        mPlaying = false;
         mediaPlayer.release();
         mediaPlayer = null;
 
@@ -136,6 +131,17 @@ public class BackgroundMediaFragment extends Fragment
         }
 
         mScrubBar.setProgress(0);
+    }
+
+    public int getAudioLengthMilliseconds()
+    {
+        if(mediaPlayer == null)
+        {
+            Log.e(MEDIA_HELPER_TAG, "Media player does not have a track associated with it.");
+            return -1;
+        }
+
+        return mediaPlayer.getDuration();
     }
 
     public void setMediaID(int ID)
@@ -161,7 +167,7 @@ public class BackgroundMediaFragment extends Fragment
             try
             {
                 mediaPlayer = MediaPlayer.create(appContext, mediaID);
-                mediaPlayer.setLooping(true);
+                mediaPlayer.setLooping(false);
                 return true;
             }
             catch(Resources.NotFoundException rnfe)
@@ -189,7 +195,7 @@ public class BackgroundMediaFragment extends Fragment
         @Override
         protected Void doInBackground(Void... params)
         {
-            while (mPlaying)
+            while (mediaPlayer.isPlaying())
             {
                 publishProgress();
                 SystemClock.sleep(250);
@@ -203,12 +209,9 @@ public class BackgroundMediaFragment extends Fragment
             super.onProgressUpdate(values);
 
             int songPosition = mediaPlayer.getCurrentPosition();
-
-            mScrubBar.setMax(mediaPlayer.getDuration());
             mScrubBar.setProgress(songPosition);
-            mMediaListener.publishSongState(songPosition);
+            // this is the broken line
+//            mMediaListener.publishSongState(songPosition);
         }
-
-
     }
 }
