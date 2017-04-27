@@ -3,6 +3,7 @@ package com.aarondevelops.alma_mater.Boundary;
 import android.widget.TextView;
 
 import com.aarondevelops.alma_mater.Framework.MediaListener;
+import com.aarondevelops.alma_mater.R;
 
 public class ProgressUpdater implements MediaListener
 {
@@ -25,8 +26,8 @@ public class ProgressUpdater implements MediaListener
     @Override
     public void reset()
     {
-        mPositionLabel.setText("-");
-        mDurationLabel.setText("-");
+        mPositionLabel.setText(R.string._00_00);
+        mDurationLabel.setText(R.string._00_00);
     }
 
     @Override
