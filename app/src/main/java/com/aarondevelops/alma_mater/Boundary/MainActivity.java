@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements
         initializeNoteFragment();
         initializeProgressBar();
         initializeLyricFragment();
+        initializeProgressUpdater();
     }
 
     public void onPlayButton(View v)
@@ -132,6 +133,15 @@ public class MainActivity extends AppCompatActivity implements
 
         mLyricManagerFragment.setLyricFields(pastLyrics, currentLyrics, nextLyrics);
         mMediaFragment.registerMediaListener(mLyricManagerFragment);
+    }
+
+    private void initializeProgressUpdater()
+    {
+        TextView progressLabel = (TextView) findViewById(R.id.currentPositionLabel);
+        TextView durationLabel = (TextView) findViewById(R.id.durationLabel);
+
+        ProgressUpdater updater = new ProgressUpdater(progressLabel, durationLabel);
+        mMediaFragment.registerMediaListener(updater);
     }
 
     private boolean fragmentExists(String tag)

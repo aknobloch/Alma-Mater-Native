@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 
 import com.aarondevelops.alma_mater.Framework.MediaListener;
 
+import java.util.ArrayList;
+
 public class BackgroundMediaFragment extends Fragment implements MediaPlayer.OnCompletionListener
 {
     public static final String MEDIA_HELPER_TAG = "BackgroundMediaFragment";
@@ -20,12 +22,13 @@ public class BackgroundMediaFragment extends Fragment implements MediaPlayer.OnC
     private Integer mediaID;
     private MediaPlayer mediaPlayer;
     private ProgressBar mScrubBar;
-    private MediaListener mMediaListener;
+    private ArrayList<MediaListener> mMediaListener;
     private boolean mPlaying;
 
     public BackgroundMediaFragment()
     {
         super();
+        mMediaListener = new ArrayList<>();
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -74,6 +77,12 @@ public class BackgroundMediaFragment extends Fragment implements MediaPlayer.OnC
 
         mediaPlayer.start();
         mPlaying = true;
+
+        for(MediaListener listener : mMediaListener)
+        {
+            listener.publishSongDuration(mediaPlayer.getDuration());
+        }
+
         mediaPlayer.setOnCompletionListener(this);
         initializeScrubBar();
 
@@ -90,7 +99,7 @@ public class BackgroundMediaFragment extends Fragment implements MediaPlayer.OnC
 
         mScrubBar.setMax(getAudioLengthMilliseconds());
         mScrubBar.setProgress(mediaPlayer.getCurrentPosition());
-        new ScrubBarUpdater().execute();
+        new ProgressTracker().execute();
     }
 
     public void pauseMedia()
@@ -122,7 +131,10 @@ public class BackgroundMediaFragment extends Fragment implements MediaPlayer.OnC
 
         if(mMediaListener != null)
         {
-            mMediaListener.reset();
+            for(MediaListener listener : mMediaListener)
+            {
+                listener.reset();
+            }
         }
 
         Log.i(MEDIA_HELPER_TAG, "Stopping track.");
@@ -161,7 +173,7 @@ public class BackgroundMediaFragment extends Fragment implements MediaPlayer.OnC
 
     public void registerMediaListener(MediaListener listener)
     {
-        mMediaListener = listener;
+        mMediaListener.add(listener);
     }
 
     @Override
@@ -200,7 +212,7 @@ public class BackgroundMediaFragment extends Fragment implements MediaPlayer.OnC
         }
     }
 
-    class ScrubBarUpdater extends AsyncTask<Void, Void, Void>
+    class ProgressTracker extends AsyncTask<Void, Void, Void>
     {
 
         @Override
@@ -221,7 +233,10 @@ public class BackgroundMediaFragment extends Fragment implements MediaPlayer.OnC
 
             int songPosition = mediaPlayer.getCurrentPosition();
             mScrubBar.setProgress(songPosition);
-            mMediaListener.publishSongState(songPosition);
+            for(MediaListener listener : mMediaListener)
+            {
+                listener.publishSongState(songPosition);
+            }
         }
     }
 }

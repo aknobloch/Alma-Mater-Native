@@ -92,6 +92,12 @@ public class LyricManagerFragment extends Fragment implements MediaListener
         initializeQueue();
     }
 
+    @Override
+    public void publishSongDuration(int duration)
+    {
+        return;
+    }
+
     private static void initializeQueue()
     {
         nextLyricQueue = new LinkedList<>();
