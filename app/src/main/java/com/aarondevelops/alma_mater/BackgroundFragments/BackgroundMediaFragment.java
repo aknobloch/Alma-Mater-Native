@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 
 import com.aarondevelops.alma_mater.Framework.MediaListener;
 
-public class BackgroundMediaFragment extends Fragment
+public class BackgroundMediaFragment extends Fragment implements MediaPlayer.OnCompletionListener
 {
     public static final String MEDIA_HELPER_TAG = "BackgroundMediaFragment";
 
@@ -21,6 +21,7 @@ public class BackgroundMediaFragment extends Fragment
     private MediaPlayer mediaPlayer;
     private ProgressBar mScrubBar;
     private MediaListener mMediaListener;
+    private boolean mPlaying;
 
     public BackgroundMediaFragment()
     {
@@ -72,6 +73,8 @@ public class BackgroundMediaFragment extends Fragment
         }
 
         mediaPlayer.start();
+        mPlaying = true;
+        mediaPlayer.setOnCompletionListener(this);
         initializeScrubBar();
 
         Log.i(MEDIA_HELPER_TAG, "Playing track.");
@@ -99,6 +102,7 @@ public class BackgroundMediaFragment extends Fragment
         }
 
         mediaPlayer.pause();
+        mPlaying = false;
         Log.i(MEDIA_HELPER_TAG, "Pausing track.");
     }
 
@@ -111,6 +115,7 @@ public class BackgroundMediaFragment extends Fragment
         }
 
         mediaPlayer.release();
+        mPlaying = false;
         mediaPlayer = null;
 
         resetScrubBar();
@@ -159,6 +164,12 @@ public class BackgroundMediaFragment extends Fragment
         mMediaListener = listener;
     }
 
+    @Override
+    public void onCompletion(MediaPlayer mp)
+    {
+        stopMedia();
+    }
+
     class MediaHelperLoader extends AsyncTask<Void, Void, Boolean>
     {
         @Override
@@ -195,7 +206,7 @@ public class BackgroundMediaFragment extends Fragment
         @Override
         protected Void doInBackground(Void... params)
         {
-            while (mediaPlayer.isPlaying())
+            while (mPlaying)
             {
                 publishProgress();
                 SystemClock.sleep(250);
@@ -210,8 +221,7 @@ public class BackgroundMediaFragment extends Fragment
 
             int songPosition = mediaPlayer.getCurrentPosition();
             mScrubBar.setProgress(songPosition);
-            // this is the broken line
-//            mMediaListener.publishSongState(songPosition);
+            mMediaListener.publishSongState(songPosition);
         }
     }
 }

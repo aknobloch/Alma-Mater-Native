@@ -79,8 +79,7 @@ public class LyricManagerFragment extends Fragment implements MediaListener
         if(progressSeconds < 60) return "How we have grown, and those that we've met";
         if(progressSeconds < 67) return "Georgia Gwinnett, with love and respect";
         if(progressSeconds < 76) return "Our alma mater, Georgia Gwinnett";
-        if(progressSeconds < 85) return "Our alma mater, Georgia Gwinnett";
-        return "-";
+        return "Our alma mater, Georgia Gwinnett ";
     }
 
     @Override
@@ -108,6 +107,6 @@ public class LyricManagerFragment extends Fragment implements MediaListener
         nextLyricQueue.add("How we have grown, and those that we've met");
         nextLyricQueue.add("Georgia Gwinnett, with love and respect");
         nextLyricQueue.add("Our alma mater, Georgia Gwinnett");
-        nextLyricQueue.add("Our alma mater, Georgia Gwinnett");
+        nextLyricQueue.add("Our alma mater, Georgia Gwinnett ");
     }
 }
