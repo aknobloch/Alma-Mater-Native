@@ -232,6 +232,7 @@ public class BackgroundMediaFragment extends Fragment implements MediaPlayer.OnC
             super.onProgressUpdate(values);
 
             int songPosition = mediaPlayer.getCurrentPosition();
+            Log.d("DEBUG", "Song position: " + songPosition + " / " + mediaPlayer.getDuration());
             mScrubBar.setProgress(songPosition);
             for(MediaListener listener : mMediaListener)
             {

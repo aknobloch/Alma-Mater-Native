@@ -39,14 +39,10 @@ public class ProgressUpdater implements MediaListener
 
     private String[] getTime(int duration)
     {
-        int minutes = 0;
         int seconds = duration / 1000;
+        int minutes = seconds / 60;
+        seconds = seconds % 60;
 
-        while(seconds >= 60)
-        {
-            minutes++;
-            seconds /= 60;
-        }
         String minutesString = (minutes < 10) ? "0" + minutes : "" + minutes;
         String secondString = (seconds < 10) ? "0" + seconds : "" + seconds;
 
